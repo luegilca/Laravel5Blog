@@ -13,6 +13,19 @@ use Illuminate\Http\Request;
 |
 */
 
+Route::prefix( 'api' )->group( function( ){
+  Route::group( [ 'middleware' => ['api'] ], function( ) {
+    Route::post( 'login', [ 'as' => 'user.auth', 'uses' => 'UserController@login' ] );
+    Route::post( 'admin-login', [ 'as' => 'admin.auth', 'uses' => 'AdminController@login' ] );
+  });
+
+  Route::group( [ 'middleware' => ['admin-api'] ], function( ) {
+    Route::get( 'dashboard', [ 'as' => 'admin.dashboard', 'uses' => 'AdminController@dash' ] );
+  });
+
+});
+
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
